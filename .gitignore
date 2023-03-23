@@ -12,3 +12,6 @@ env__/
 .vscode/symbols.json
 app/db.sqlite3
 .env
+
+# Custom:
+__pycache__

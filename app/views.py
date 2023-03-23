@@ -2,17 +2,14 @@
 """
 Copyright (c) 2019 - present AppSeed.us
 """
-
-# Python modules
-import os, logging 
+# import logging
+# import os
 from datetime import datetime
 
-# Flask modules
-from flask   import render_template, request, send_from_directory
-from jinja2  import TemplateNotFound
-from api.models import Data
+from flask import render_template, request, send_from_directory
+from jinja2 import TemplateNotFound
 
-# App modules
+from api.models import Data
 from app import app
 
 '''
@@ -99,51 +96,44 @@ def datatables():
     table += '    </tbody>'
     table += '</table>' 
     
-    return render_template( 'datatables/datatables.html', segment='datatables', table=table )
+    return render_template( "datatables/datatables.html", segment="datatables", table=table )
 
 # DataTables lazy loaded via API
-@app.route('/datatables-api/')
+@app.route("/datatables-api/")
 def datatables_api():
 
-    return render_template( 'datatables/datatables-via-api.html', segment='datatables-api' )
+    return render_template( "datatables/datatables-via-api.html", segment="datatables-api" )
 
 # DataTables lazy loaded via API
-@app.route('/datatables-from-file/')
+@app.route("/datatables-from-file/")
 def datatables_from_file():
 
-    return render_template( 'datatables/datatables-via-file.html', segment='datatables-from-file' )
+    return render_template( "datatables/datatables-via-file.html", segment="datatables-from-file" )
 
 # App main route + generic routing
-@app.route('/')
+@app.route("/")
 def index():
 
-    return render_template( 'index.html', segment='index.html' )
+    return render_template( "index.html", segment="index.html" )
 
 # App main route + generic routing
-@app.route('/<path>')
+@app.route("/<path>")
 def pages(path):
-
     try:
-
         # Detect the current page
         segment = get_segment( request )
-
         # Serve the file (if exists) from app/templates/FILE.html
-        return render_template( 'pages/' + path, segment=segment )
+        return render_template("pages/" + path, segment=segment)
     
     except TemplateNotFound:
         return render_template('pages/page-404.html'), 404
 
+
 def get_segment( request ): 
-
     try:
-
         segment = request.path.split('/')[-1]
-
-        if segment == '':
-            segment = 'index'
-
+        if segment == "":
+            segment = "index"
         return segment    
-
     except:
         return None  

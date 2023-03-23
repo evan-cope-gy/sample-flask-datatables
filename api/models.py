@@ -2,18 +2,17 @@
 """
 Copyright (c) 2019 - present AppSeed.us
 """
-
-from datetime import datetime
 import json
+from datetime import datetime
 
 from app import db
 
+
 class Data(db.Model):
 
-    __tablename__ = 'data'
+    __tablename__ = "data"
 
     id = db.Column(db.Integer, primary_key=True)
-
     code     = db.Column(db.String(64))   # product code 
     name     = db.Column(db.String(128))  # product name
     value    = db.Column(db.Integer)      # numeric
@@ -36,17 +35,14 @@ class Data(db.Model):
         return cls.query.filter_by(id=id).first()
 
     def toDICT(self):
-
-        cls_dict          = {}
-        cls_dict['ID']   = self.id
-        cls_dict['Product Code'] = self.code
-        cls_dict['Description'] = self.name
-        cls_dict['Price'] = self.value
-        cls_dict['Currency'] = self.currency
-        cls_dict['TimeStamp'] = datetime.utcfromtimestamp(self.ts).strftime('%Y-%m-%d')
-
+        cls_dict = {}
+        cls_dict["ID"] = self.id
+        cls_dict["Product Code"] = self.code
+        cls_dict["Description"] = self.name
+        cls_dict["Price"] = self.value
+        cls_dict["Currency"] = self.currency
+        cls_dict["TimeStamp"] = datetime.utcfromtimestamp(self.ts).strftime("%Y-%m-%d")
         return cls_dict
 
     def toJSON(self):
-
         return self.toDICT()

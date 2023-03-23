@@ -2,37 +2,39 @@
 """
 Copyright (c) 2019 - present AppSeed.us
 """
-
-from app import app, db
-from api.models import Data
 from flask_migrate import Migrate
 
-import csv
-from datetime import datetime
-from random   import randint
+from app import app, db
 
-# Migrate APP (if necessary)
+# =============================================================================
+
+# Migrate App (if necessary):
 Migrate(app, db)
 
-# Inner command 
+
+# Inner command:
 def load_cmd(aUseRandomValues=None):
+    import csv
+    from datetime import datetime
+    from random import randint
+    from api.models import Data
 
     if aUseRandomValues:
         print( ' >>> Randomize Values ')
     else:
         print( ' >>> Use Values from input file ')
 
-    # Create Tables (if not exist)
+    # Create Tables (if not exist):
     db.create_all()
-
-    # Truncate 
+    # Truncate :
     db.session.query(Data).delete()
     db.session.commit()
 
     with open('media/data.csv', newline='') as csvfile:
-        
-        csvreader = csv.reader(csvfile) # load file
-        header    = next(csvreader)     # ignore header (1st line)
+        # Load CSV file:
+        csvreader = csv.reader(csvfile)
+        # Ignore header (1st line):
+        header    = next(csvreader)
         
         '''
         Expected format: 
@@ -45,13 +47,11 @@ def load_cmd(aUseRandomValues=None):
             currency     (string)  : usd, eur 
             type         (string)  : transaction (hardoded)
         '''
-
-        iter = 0 # used for timestamp
+        # Iterate over the rows for timestamp:
+        iter = 0 
         for row in csvreader:
-
             iter += 1
-
-            if len( row ) != 5:
+            if len(row) != 5:
                 print( ' >>> Error parsing line ('+str(iter)+') -> ' + ' '.join([str(elem) for elem in row]) )
                 continue        
 
@@ -72,21 +72,20 @@ def load_cmd(aUseRandomValues=None):
             item_ts       = int( item_ts )
 
             _data = Data(code=item_code, name=item_name, value=item_value, currency=item_currency, type=item_type, ts=item_ts)
-
             db.session.add(_data)
 
         db.session.commit()
 
+
 @app.cli.command("load_data")
 def load_data():
-
     return load_cmd()
+
 
 @app.cli.command("load_random_data")
 def load_random_data():
-
     return load_cmd( True )
+
 
 if __name__ == "__main__":
     app.run()
-

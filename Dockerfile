@@ -1,4 +1,4 @@
-FROM python:3.9
+FROM python:3.9-slim-bullseye
 
 COPY . .
 
@@ -10,8 +10,11 @@ ENV PYTHONUNBUFFERED 1
 RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 
-# load sample data
-RUN flask load_random_data
+# Run Flask app:
+RUN python run.py
 
-# gunicorn
-CMD ["gunicorn", "--config", "gunicorn-cfg.py", "run:app"]
+# Load sample data:
+# RUN flask load_random_data
+
+# Gunicorn Configuration
+# CMD ["gunicorn", "--config", "gunicorn-cfg.py", "run:app"]
